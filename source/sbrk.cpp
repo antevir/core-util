@@ -63,7 +63,7 @@ void * mbed_krbs_ex(const ptrdiff_t size, ptrdiff_t *actual)
     }
     // krbs does not support deallocation.
     if (size < 0) {
-        return (void *) -1;
+        return NULL;
     }
 
     uintptr_t size_internal = (uintptr_t)size;
@@ -77,7 +77,7 @@ void * mbed_krbs_ex(const ptrdiff_t size, ptrdiff_t *actual)
     ptrdiff_t ptr_diff = mbed_sbrk_diff;
     while (1) {
         if ((size_internal > (uintptr_t)ptr_diff) && (actual == NULL)) {
-            return (void *) -1;
+            return NULL;
         }
         if (mbed::util::atomic_cas((uint32_t *)&mbed_sbrk_diff, (uint32_t *)&ptr_diff, (uint32_t)(ptr_diff - size_internal))) {
             break;
